@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '~> 1.6.0'
 
   s.add_development_dependency 'capybara', '~> 1.1.2'
+  s.add_development_dependency 'pry'
   s.add_development_dependency 'coffee-rails'
   s.add_development_dependency 'factory_girl_rails', '~> 4.2.1'
   s.add_development_dependency 'ffaker'

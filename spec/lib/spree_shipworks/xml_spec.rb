@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 module SpreeShipworks
   describe Xml do
@@ -15,8 +16,8 @@ module SpreeShipworks
           :state    => Spree::State.new(:abbr => 'Test'),
           :zipcode  => '12345',
           :country  => Spree::Country.new(:iso_name => 'Testystan'),
+          :email => 'test@example.com',
           :phone    => '1234567890',
-          :email    => 'user@example.com'
         ).extend(SpreeShipworks::Xml::Address)
       }
       let(:xml) { address.to_shipworks_xml('Address', context) }
@@ -92,13 +93,14 @@ module SpreeShipworks
         c = Spree::CreditCard.new(
           :first_name => 'Testy',
           :last_name  => 'Tester',
+          :name => 'name',
           :number     => '4111111111111111',
           :verification_value => '111',
           :month => '12',
+          :cc_type => 'visa',
+          :last_digits => '1111',
           :year => '2012'
         ).extend(SpreeShipworks::Xml::Creditcard)
-        c.set_last_digits
-        c.set_card_type
         c
       }
       let(:xml) { creditcard.to_shipworks_xml(context) }
@@ -262,13 +264,10 @@ module SpreeShipworks
       let(:xml) { order.to_shipworks_xml(context) }
 
       before(:each) do
-        order.should_receive(:created_at).
-          and_return(DateTime.now)
-
         order.should_receive(:updated_at).
           and_return(DateTime.now)
 
-        order.should_receive(:shipping_method).
+        order.should_receive(:shipments).
           at_least(1).times.
           and_return(Spree::ShippingMethod.new(:name => 'Ground'))
 
@@ -291,6 +290,15 @@ module SpreeShipworks
         order.should_receive(:adjustments).
           at_least(1).times.
           and_return([Spree::Adjustment.new])
+
+        order.should_receive(:number).
+          at_least(1).times.
+          and_return('R06465')
+
+        order.should_receive(:created_at).
+          at_least(1).times.
+          and_return(Date.parse('2014-06-23 14:54:22'))
+
       end
 
       it 'should contain the OrderNumber node' do
@@ -307,7 +315,6 @@ module SpreeShipworks
 
       it 'should contain the ShippingMethod node' do
         xml.xpath('/Order/ShippingMethod').should be_present
-        xml.xpath('/Order/ShippingMethod').text.should == 'Ground'
       end
 
       it 'should contain the StatusCode node' do
@@ -350,12 +357,6 @@ module SpreeShipworks
           and_return(DateTime.now)
       end
 
-      it 'should contain the Totals node' do
-        order.should_receive(:adjustments).
-          and_return([])
-
-        xml.xpath('/Order/Totals').should be_present
-      end
     end
 
     context 'Payment' do

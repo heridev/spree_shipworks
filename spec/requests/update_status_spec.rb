@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe 'UpdateStatus action' do
   # according to the docs, a successful response should look like this
@@ -25,7 +26,9 @@ describe 'UpdateStatus action' do
   include_context 'for ShipWorks actions'
   it_should_behave_like 'a ShipWorks API action'
 
+
   it 'should respond with success' do
+    binding.pry
     Spree::Order.should_receive(:find).
       with(action_params['order']).
       and_return(order_scope)

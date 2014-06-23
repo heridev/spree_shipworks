@@ -12,7 +12,7 @@ module SpreeShipworks
           r.element 'UpdateSuccess'
         end
       else
-        error_response("UNPROCESSIBLE_ENTITY", "Could not update tracking information for Order #R#{params['order']}")
+        error_response("UNPROCESSABLE_ENTITY", "Could not update tracking information for Order #R#{params['order']}")
       end
 
     rescue ActiveRecord::RecordNotFound

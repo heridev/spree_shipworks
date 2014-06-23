@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe 'GetOrders action' do
   # according to the docs, the response should look something like this
@@ -126,6 +127,7 @@ describe 'GetOrders action' do
   include_context 'for ShipWorks actions'
   it_should_behave_like "a ShipWorks API action"
 
+
   context 'with a missing start param' do
     let(:action_params) {
       { 'maxcount' => '50' }
@@ -171,11 +173,15 @@ describe 'GetOrders action' do
   end
 
   context 'with valid params' do
+
+    let!(:order_1) { create(:order, :created_at => DateTime.now ) }
+    let!(:order_2) { create(:order, :created_at => DateTime.now ) }
+
     let(:action_params) {
-      { 'start' => '2012-01-01T00:00:00', 'maxcount' => '5' }
+      { 'start' => 1.day.ago.to_s, 'maxcount' => '5' }
     }
     let(:order) {
-      Spree::Order.new.extend(SpreeShipworks::Xml::Order)
+      order_1.extend(SpreeShipworks::Xml::Order)
     }
 
     it 'should return valid xml' do

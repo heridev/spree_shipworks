@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pry'
 
 describe 'HandleUnknown actions' do
 
@@ -19,6 +20,7 @@ describe 'HandleUnknown actions' do
   it_should_behave_like 'a ShipWorks API action'
 
   it 'should return an error if the action is unknown' do
+    binding.pry
     xml.xpath('/ShipWorks/Error').should be_present
     xml.xpath('/ShipWorks/Error/Code').text.should == 'NOT_FOUND'
   end

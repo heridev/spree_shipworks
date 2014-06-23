@@ -5,7 +5,7 @@ shared_examples "a ShipWorks API action" do
     ship_works = xml.at_xpath('/ShipWorks')
     ship_works['moduleVersion'].should == '3.1.11.0'
   end
-  
+
   it 'should specify the ShipWorks schema version' do
     ship_works = xml.at_xpath('/ShipWorks')
     ship_works['schemaVersion'].should == '1.0.0'

@@ -11,7 +11,7 @@ module SpreeShipworks
           a.element 'PostalCode', self.zipcode
           a.element 'Country',    self.country.try(:iso_name)
           a.element 'Phone',      self.phone
-          a.element 'Email',      self.try(:email) || self.user.try(:email)
+          a.element 'Email',      self.email if self.try(:email)
         end
       end
     end # Address
@@ -94,7 +94,7 @@ module SpreeShipworks
           order_context.element 'OrderNumber',    self.number.gsub('R','')
           order_context.element 'OrderDate',      self.created_at.strftime('%Y-%m-%dT%H:%M:%S.%N')
           order_context.element 'LastModified',   self.updated_at.strftime('%Y-%m-%dT%H:%M:%S.%N')
-          order_context.element 'ShippingMethod', self.shipments.try(:first).shipping_method.try(:name)
+          order_context.element 'ShippingMethod', self.shipments.try(:first).try(:shipping_method).try(:name)
           order_context.element 'StatusCode',     self.state
           order_context.element 'CustomerID',     self.user.try(:id)
 
